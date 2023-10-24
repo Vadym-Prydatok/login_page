@@ -4,5 +4,6 @@ export type User = {
   "email": string,
   "birthday_date": string,
   "phone_number": string,
-  "address": string
+  "address": string,
+  [key: string]: string | number,
 }

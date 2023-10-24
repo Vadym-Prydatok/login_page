@@ -1,12 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from '../types/User';
 
-const BASE_URL = 'http://146.190.118.121/api/table';
-
-function wait(delay: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, delay);
-  });
-}
+const BASE_URL = 'https://technical-task-api.icapgroupgmbh.com/api/table';
 
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
@@ -24,20 +19,20 @@ function request<T>(
     };
   }
 
-  return wait(100)
-    .then(() => fetch(BASE_URL + url, options))
+  return fetch(url, options)
     .then(response => {
+
       if (!response.ok) {
         throw new Error();
       }
 
       return response.json();
-    });
+    })
 }
 
 export const client = {
+  initGet: <T>() => request<T>(BASE_URL),
   get: <T>(url: string) => request<T>(url),
-  post: <T>(url: string, data: User) => request<T>(url, 'POST', data),
-  patch: <T>(url: string, data: User) => request<T>(url, 'PATCH', data),
-  delete: (url: string) => request(url, 'DELETE'),
+  post: <T>(url: string, data: any) => request<T>(url, 'POST', data),
+  patch: <T>(url: string, data: any) => request<T>(url, 'PATCH', data),
 };

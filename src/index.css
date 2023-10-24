@@ -14,6 +14,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+* {
+  transition: all 0.3 ease-in-out;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -32,8 +36,8 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.2em;
+  line-height: 0.2;
 }
 
 button {
@@ -43,7 +47,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #2e0333a9;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -55,7 +59,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -66,4 +70,12 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+@media (min-width: 480px) {
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+  
 }
