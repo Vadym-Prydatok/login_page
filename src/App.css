@@ -1,5 +1,6 @@
 @import url(./style/logInPage.css);
 @import url(./style/mainPage.css);
+@import url(./style/loader.css);
 
 #root {
   max-width: 1280px;
@@ -7,5 +8,3 @@
   padding: 2rem;
   text-align: center;
 }
-
-

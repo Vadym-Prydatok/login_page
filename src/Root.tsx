@@ -6,6 +6,7 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import store from "./app/store.ts";
 import { RequaireAuth } from "./components/RequaireAuth.tsx";
+import { NotFound } from "./components/NotFound.tsx";
 
 export const Root = () => {
   return (
@@ -19,8 +20,7 @@ export const Root = () => {
                 <Route index element={<Main />} />
               </Route>
             </Route>
-
-            <Route path="*" element={<h1>Not Found</h1>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </React.StrictMode>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-:root {
+.page {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -15,7 +15,7 @@
 }
 
 * {
-  transition: all 0.3 ease-in-out;
+  transition: all ease-in-out 0.3s;
 }
 
 a {
@@ -59,23 +59,9 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 @media (min-width: 480px) {
   h1 {
     font-size: 3.2em;
     line-height: 1.1;
   }
-  
 }

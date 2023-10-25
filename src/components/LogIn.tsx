@@ -3,8 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, logout, selectIsAuthenticated } from "../app/authSlice";
 import { RootState } from "../app/store";
-import { useTransition, animated } from "react-spring";
+import { CSSTransition } from "react-transition-group";
 import classNames from "classnames";
+import { Loader } from "./Loader";
+import { setIsLoading } from "../app/loadSlice";
 
 export const LogIn = () => {
   const navigate = useNavigate();
@@ -13,7 +15,11 @@ export const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setMessageError] = useState("");
 
-  const currentPage = useSelector((state: RootState) => state.pagination.currentPage);
+  const isLoading = useSelector((state: RootState) => state.load.isLoading);
+
+  const currentPage = useSelector(
+    (state: RootState) => state.pagination.currentPage
+  );
 
   const isAuthenticated = useSelector((state: RootState) =>
     selectIsAuthenticated(state)
@@ -28,25 +34,19 @@ export const LogIn = () => {
     };
   }, [errorMessage]);
 
-  const transitions = useTransition(errorMessage, {
-    from: { opacity: 0, transform: "translateX(-100%)" },
-    enter: { opacity: 1, transform: "translateY(0)" },
-    leave: { opacity: 0, transform: "translateX(100%)" },
-  });
-
   const onSubmit = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
 
     if (!username.trim().length) {
-      setMessageError(`Username can't be empty`)
+      setMessageError(`Username can't be empty`);
 
       return;
     }
 
     if (!password.trim().length) {
-      setMessageError(`Password can't be empty`)
+      setMessageError(`Password can't be empty`);
 
       return;
     }
@@ -60,6 +60,7 @@ export const LogIn = () => {
     };
 
     try {
+      dispatch(setIsLoading(true));
       const response = await fetch(
         "https://technical-task-api.icapgroupgmbh.com/api/login/",
         requestOptions
@@ -72,60 +73,86 @@ export const LogIn = () => {
       }
 
       setMessageError(data.error);
-
     } catch (error) {
       console.error(error);
+    } finally {
+      dispatch(setIsLoading(false));
     }
   };
 
   return (
     <div className="form-container">
-      <h1 className={classNames({ 'active': isAuthenticated })}>{isAuthenticated ? "Log In" : "Log Out"}</h1>
-      <form className="form">
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+      <h1 className={classNames({ active: isAuthenticated })}>
+        {isAuthenticated ? "Log In" : "Log Out"}
+      </h1>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <form className="form">
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
 
-          <input
-            name="username"
-            id="username"
-            type="text"
-            placeholder="Login"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+            <input
+              name="username"
+              id="username"
+              type="text"
+              placeholder="Login"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
 
-          <input
-            name="password"
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="button" onClick={() => setShowPassword(!showPassword)} className="showPassword"><img src="/eye.svg" alt="eye" /></button>
-        </div>
+            <input
+              name="password"
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              autoComplete="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="showPassword"
+            >
+              <img src="/eye.svg" alt="eye" />
+            </button>
+          </div>
 
-        <button type="submit" onClick={(e) => onSubmit(e)} className="submit_button">
-          Sign In
-          <span className="pulse"></span>
-        </button>
+          {!isAuthenticated && (
+            <button
+              type="submit"
+              onClick={(e) => onSubmit(e)}
+              className="submit_button"
+            >
+              Sign In
+              <span className="pulse"></span>
+            </button>
+          )}
 
-        {transitions(
-        (style, item) =>
-          item && (
-            <animated.div className="notice" style={style}>
-              {item}
-            </animated.div>
-          )
+          <CSSTransition
+            in={errorMessage !== ""}
+            timeout={300}
+            classNames="fade-zoom"
+            unmountOnExit
+          >
+            <div className="notice">{errorMessage}</div>
+          </CSSTransition>
+        </form>
       )}
-      </form>
 
-      {isAuthenticated && <button onClick={() => navigate(`/main/${currentPage}`)}>Go Forward</button>}
-      {isAuthenticated && <button onClick={() => dispatch(logout())}>Log out</button>}
+      {isAuthenticated && (
+        <button onClick={() => navigate(`/main/${currentPage}`)}>
+          Go Forward
+        </button>
+      )}
+      {isAuthenticated && (
+        <button onClick={() => dispatch(logout())}>Log out</button>
+      )}
     </div>
   );
 };
